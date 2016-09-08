@@ -43,8 +43,7 @@ class graphite_web(
 
   exec { 'install_graphite_web':
     cwd         => $source_path,
-    command     => "/usr/bin/python setup.py install --prefix ${prefix}",
-    user        => $user,
+    command     => "/usr/bin/python setup.py install --prefix ${prefix} ; chown -R ${user} ${prefix}",
     refreshonly => true,
     require     => Vcsrepo[$source_path],
   }
