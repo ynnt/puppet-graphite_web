@@ -38,7 +38,6 @@ class graphite_web(
     revision => $revision,
     source   => $source,
     provider => git,
-    owner    => $user,
     notify   => Exec['install_graphite_web'],
   }
 
