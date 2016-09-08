@@ -5,6 +5,7 @@ class graphite_web(
   $source = 'https://github.com/graphite-project/graphite-web.git',
   $source_path = '/usr/local/src/graphite-web',
   $revision = '0.9.x',
+  $graphite_secret = undef,
   $data_dirs = undef,
   $cluster_servers = undef,
   $carbonlink_hosts = undef,
@@ -15,6 +16,8 @@ class graphite_web(
   $rrd_dir = undef,
   $user = 'www-data',
 ) {
+
+  validate_string($graphite_secret)
 
   if defined(Class['graphite_web::vhost']) {
     $notify_resource = Class['graphite_web::vhost']
