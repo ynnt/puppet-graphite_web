@@ -38,12 +38,14 @@ class graphite_web(
     revision => $revision,
     source   => $source,
     provider => git,
+    owner    => $user,
     notify   => Exec['install_graphite_web'],
   }
 
   exec { 'install_graphite_web':
     cwd         => $source_path,
     command     => "/usr/bin/python setup.py install --prefix ${prefix}",
+    user        => $user,
     refreshonly => true,
     require     => Vcsrepo[$source_path],
   }
@@ -51,6 +53,7 @@ class graphite_web(
   file { "${prefix}/conf/graphite.wsgi":
     ensure  => present,
     source  => "${prefix}/conf/graphite.wsgi.example",
+    owner   => $user,
     require => Exec['install_graphite_web'],
   }
 
@@ -69,12 +72,14 @@ class graphite_web(
   file { "${prefix}/webapp/graphite/local_settings.py":
     ensure  => present,
     content => template('graphite_web/local_settings.py.erb'),
+    owner   => $user,
     notify  => $notify_resource,
     require => Exec['install_graphite_web'],
   }
 
   exec { 'create_database':
     command     => '/usr/bin/django-admin syncdb --settings=graphite.settings --noinput',
+    user        => $user,
     environment => "PYTHONPATH=${prefix}/webapp",
     creates     => $dbfile,
     require     => File["${prefix}/webapp/graphite/local_settings.py"],
