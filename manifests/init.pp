@@ -94,6 +94,7 @@ class graphite_web(
   exec { 'init_index':
     command => "${prefix}/bin/build-index.sh",
     creates => $index_file,
+    user    => $user,
     require => File["${prefix}/webapp/graphite/local_settings.py"],
   }
   
